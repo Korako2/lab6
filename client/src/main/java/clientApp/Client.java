@@ -32,12 +32,8 @@ public class Client {
         boolean statusOfRequest = true;
         boolean statusOfConnection;
         while (statusOfRequest && countOfConnections <= maxCountOfConnection) {
-            try {
-                statusOfConnection = connectToServer();
-                if (statusOfConnection) statusOfRequest = requestToServer(userInputManager);
-            } catch (IOException | IllegalArgumentException | ClassNotFoundException e) {
-                out.println(e.getMessage());
-            }
+            statusOfConnection = connectToServer();
+            if (statusOfConnection) statusOfRequest = requestToServer(userInputManager);
         }
         disconnect();
         out.println("The client has completed his work.");
@@ -71,7 +67,7 @@ public class Client {
         if (socketChannel != null) socketChannel.close();
     }
 
-    public boolean requestToServer(UserInputManager userInputManager) throws IOException, ClassNotFoundException, IllegalArgumentException {
+    public boolean requestToServer(UserInputManager userInputManager) {
         try {
             Request request = null;
             Response response;
@@ -93,10 +89,11 @@ public class Client {
             } while (request == null || !request.getNameOfCommand().equals("EXIT"));
             return false;
         } catch (IOException e) {
-            throw new IOException("The connection to the server is broken.");
+            out.println("The connection to the server is broken.");
+            return false;
         } catch (ClassNotFoundException e) {
-            throw new ClassNotFoundException("An error occurred while reading the data.");
+            out.println("An error occurred while reading the data.");
+            return false;
         }
     }
-
 }

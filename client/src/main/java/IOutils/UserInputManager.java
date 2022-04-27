@@ -32,37 +32,18 @@ public class UserInputManager {
      *
      * @return true if the program execution can be continued; false if the program execution should be stopped.
      */
-    public Request input() {
+    public Request input() throws NumberFormatException {
         printInviteMessage();
         if (!input.hasNext()) return null;
         String[] s = input.nextLine().split(" ");
         Command command = clientcommandsManager.getCommand(s[0].toUpperCase(Locale.ROOT));
-        try {
-            if (command == null) {
-                throw new IllegalArgumentException("There's no such command");
-            }
-            clientcommandsManager.addToHistory(command.getName());
-            if (!checkArgsCount(s, command))
-                throw new IllegalArgumentException("Wrong amount of arguments. Please, try again! (You can use command \"help\" for more information.)");
-        } catch (NumberFormatException e) {
-            throw e;
+        if (command == null) {
+            throw new IllegalArgumentException("There's no such command");
         }
+        clientcommandsManager.addToHistory(command.getName());
+        if (!checkArgsCount(s, command))
+            throw new IllegalArgumentException("Wrong amount of arguments. Please, try again! (You can use command \"help\" for more information.)");
         return new Request(command, s, readObjectIfNecessary(command));
-    }
-
-    /**
-     * A method for confirming the user's action.
-     *
-     * @return true if the user confirms the action; false if the user rejects the action.
-     */
-    private boolean askQuestion() {
-        while (true) {
-            out.println("yes/no?");
-            if (!input.hasNext()) return true;
-            String answer = input.nextLine();
-            if (answer.equals("yes")) return true;
-            if (answer.equals("no")) return false;
-        }
     }
 
     /**

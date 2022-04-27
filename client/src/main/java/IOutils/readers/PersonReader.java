@@ -81,7 +81,7 @@ public class PersonReader {
                         inputAndOutput.printLine("Height must be more than 0.");
                     }
                 }
-            } catch (NumberFormatException e) {
+            } catch (IllegalArgumentException e) {
                 inputAndOutput.printLine("Wrong format of input! Height must be a number!");
             }
             if (!inputAndOutput.isShowMessages()) throw new NumberFormatException("Wrong format of height.");
